@@ -1,8 +1,45 @@
 <!DOCTYPE html>
 <html>
-<body>
+<style>
+#more {display: none;}
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+</style>
 
-<a href="source/img/mbtw.jpg"></a>
+<body>
+<img src="source/img/mbtw.jpg"></img>
+<div>
+<button class="button" onclick="myFunction()" id="myBtn">Xiang's Builds</button>
+<span id="dots"></span><span id="more">DEEZ NUTS
+<img src="source/img/hyperjoy.gif"></span>
+</span>
+</div>
+<script>
+function myFunction() {
+  var dots = document.getElementById("dots");
+  var moreText = document.getElementById("more");
+  var btnText = document.getElementById("myBtn");
+
+  if (dots.style.display === "none") {
+    dots.style.display = "inline";
+    btnText.innerHTML = "Xiang's Build";
+    moreText.style.display = "none";
+  } else {
+    dots.style.display = "none";
+    btnText.innerHTML = "GOTTEM";
+    moreText.style.display = "inline";
+  }
+} 
+</script>
 
 </body>
+
 </html>
