@@ -1,0 +1,208 @@
+<html>
+<head>
+	<title>Buzzword Bingo 2.0</title>
+	
+	<style>
+	h2 {background:rgb(230,255,230);text-align:center;padding:10px;border:1px solid green;}
+	body {font-family:Verdana;margin-left:20px;margin-right:20px}
+	td {
+		padding:10px 20px;
+		border-top:1px solid lightgray;
+		border-left:1px solid lightgray;
+		border-bottom:1px solid darkgray;
+		border-right:1px solid darkgray;
+	}
+	.error {
+		background-color:#FF7F7F;
+		color:red;
+		padding:5px;
+		margin:20px 50px;
+		border:1px solid red;
+	}
+	.highlight {
+		background:#47FF84;
+	}
+	a { 
+		color:green;
+	}
+	td label { 
+		cursor:pointer;
+		
+	}
+	form { 
+		margin:5px;
+		padding:5px;
+		color:green;
+	}
+	#instructions {
+		display:none;
+		border: 1px solid green;
+		margin:10px;
+		padding:20px;
+	}
+	</style>
+	
+	<script type="text/javascript">
+	
+	words = [
+		"Fat Fingered",
+		"I tried to 2 man flex",
+		"It was a random tower bro",
+		"Of course he countered",
+		"Weaver got cced",
+		"Fmaya one team, dcorvus the other",
+		"Use x hero",
+		"Hit a dead tower",
+		"Bad speed tuning",
+		"I got gear gapped",
+		"Got dual attacked",
+		"Brought wrong comp",
+		"Int pass",
+		"I got speed RNG'ed",
+		"I forgot to do my attacks",
+		"He resisted",
+		"We bricked stronghold",
+		"F**cking MLDB MAN",
+		"OF COURSE GAB",
+		"I brought wrong artifact",
+		"98% CRIT BRO",
+		"I dc'ed/game crashed",
+		"Intfo",
+		"OOPS my unit ungeared",
+		"I copied team and lost",
+		];
+		
+	var cells = {};
+		
+	function generate() {
+		var usedWords = [];
+		
+		var node = document.getElementById("grid");
+		
+		if(node.innerHTML && !confirm("Are you sure you want to regenerate?"))
+			return;
+		
+		var html = '<table border="0">';
+		for(var y = 0; y < 5; y++) {
+			html += "<tr>"
+			for(var x = 0; x < 5; x++) {
+				do {
+					var i = Math.round(Math.random() * (words.length - 1));
+					var word = words[i];
+				} while(usedWords.indexOf(word) >= 0);
+				usedWords.push(word);
+				html += '<td id="cell_' + x + '_' + y + '"><label><input id="chk-cell_' + x + '_' + y + '" type="checkbox" onclick="cellClicked(\'cell_' + x + '_' + y + "')\">" + word + "</label></td>";				
+			}
+			html += "</tr>"
+		}
+		html += "</table>";
+		node.innerHTML = html;
+		save("BuzzwordBingo.grid", html);
+		saveGameState();
+	}
+	
+	/* http://diveintohtml5.info/storage.html */
+	function supports_html5_storage() {
+	  try {
+	    return 'localStorage' in window && window['localStorage'] !== null;
+	  } catch (e) {
+	    return false;
+	  }
+	}	
+	
+	function cellClicked(id) {
+		var c = document.getElementById("chk-" + id);
+		var d = document.getElementById(id);
+		d.className =(c.checked)?"highlight":"";		
+		saveGameState();
+	}
+	
+	function saveGameState() {
+		for(var y = 0; y < 5; y++) {
+			for(var x = 0; x < 5; x++) {
+				var id = 'cell_' + x + '_' + y;
+				var c = document.getElementById("chk-" + id);
+				save("BuzzwordBingo." + id, c.checked);
+			}
+		}
+	}
+	
+	function loadGameState() {
+		for(var y = 0; y < 5; y++) {
+			for(var x = 0; x < 5; x++) {
+				var id = 'cell_' + x + '_' + y;
+				var c = document.getElementById("chk-" + id);				
+				c.checked = (load("BuzzwordBingo." + id) == 'true');
+				var d = document.getElementById(id);
+				d.className =(c.checked)?"highlight":"";				
+			}
+		}
+	}
+	
+	function toggle(id){
+		var elem = document.getElementById(id);
+		if (elem.style.display == "block")
+			elem.style.display = "none";
+		else
+			elem.style.display = "block";
+	}
+	
+	save = function(key,value){};
+	load = function(key){return null};
+	
+	function start() {
+		if(supports_html5_storage()) {
+			save = function(key, value) {
+				localStorage.setItem(key,value);
+			};
+			load = function(key) {
+				return localStorage.getItem(key);
+			};			
+		} else {
+			alert("Your browser does not support localStorage.\nYou won't be able to persist the Bingo grid.\nUpgrading your browser may help.");
+			return;
+		}
+		
+		var grid = load("BuzzwordBingo.grid");
+		if(grid) {
+			console.log("Loaded a previously generated grid");
+			var node = document.getElementById("grid");
+			node.innerHTML = grid;
+			loadGameState();
+		}
+	}
+	</script>
+</head>
+<body onLoad="start()">
+<h1>Guildwar bingo board</h1>
+
+For when you complain in guild wars kekw
+
+<a href="javascript:toggle('instructions');">Instructions...</a>
+
+<noscript>
+<div class="error">
+<strong>Problem:</strong>
+<p><em>
+You do not have JavaScript enabled. JavaScript must be enabled for this application to work.
+</em></p>
+</div>
+</noscript>
+
+<div id="instructions">
+<h2>Instructions</h2>
+<ol>
+	<noscript><li>Enable JavaScript</li></noscript>
+	<li>Click <strong>Generate</strong> to create your Bingo board.</li>
+	<li>Print. Or (<em>new in v2.0</em>) keep it open in your browser.</li>
+	<li>Whenever someone uses one of the words during an attack, check it off.</li>
+	<li>When you've checked off an entire row or column, yell &quot;Bingo&quot;</li>
+	<li>First one to yell &quot;Bingo&quot; is declared the winner. Participants agree upon prizes beforehand.</li>
+</ol>
+</div>
+<form>
+<input type="button" value="Generate" onClick="generate();"/>
+</form>
+<div id="grid"></div>
+</body>
+</html>
